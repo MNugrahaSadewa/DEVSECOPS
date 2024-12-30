@@ -58,21 +58,21 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
     <!-- Own CSS -->
     <link rel="stylesheet" href="css/style.css">
 
-    <title>FTI UNMER</title>
+    <title>FTE Teknik Komputer</title>
 </head>
 
 <body>
     <!-- Tampilkan preloader -->
     <div class="preloader">
     <div class="loading">
-    <img src="img/poi.gif" width="80">
+    <img src="img/bg/TK.png" width="80">
     <p>Harap Tunggu...</p>
   </div>
 </div>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-uppercase">
         <div class="container">
-            <a class="navbar-brand" href="index.php">FTI UNMER</a>
+            <a class="navbar-brand" href="index.php">FTE Teknik Komputer</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -82,7 +82,7 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
                         <a class="nav-link" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
+                        <a class="nav-link" href="log.php">Log</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php">Logout</a>
@@ -97,7 +97,7 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
     <div class="container">
         <div class="row my-2">
             <div class="col-md">
-                <h3 class="text-center fw-bold text-uppercase">Data Mahasiswa FTI</h3>
+                <h3 class="text-center fw-bold text-uppercase">Data Mahasiswa Teknik Komputer 2021</h3>
                 <hr>
             </div>
         </div>

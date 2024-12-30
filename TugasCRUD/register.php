@@ -26,7 +26,7 @@ require 'function.php';
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <a class="navbar-brand" href="index.php">FTI UNMER</a>
+            <a class="navbar-brand" href="index.php">FTE Teknik Komputer</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -43,7 +43,7 @@ require 'function.php';
 
     <div class="container">
         <div class="row my-5">
-            <div class="col-md-6 text-center login" style="background-image: url('img/bg/memphis-colorful.png');">
+            <div class="col-md-6 text-center login" style="background-image: url('img/bg/TULT.jpeg');">
                 <h4 class="fw-bold">Register | Admin</h4>
                 <!-- Ini Error jika tidak bisa regsiter -->
                 <?php if (isset($error)) : ?>

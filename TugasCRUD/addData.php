@@ -24,9 +24,8 @@ if (isset($_POST['simpan'])) {
             </script>";
     }
 }
-
-
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -36,7 +35,7 @@ if (isset($_POST['simpan'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Bootstrap -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     <!-- Font Google -->
@@ -45,14 +44,14 @@ if (isset($_POST['simpan'])) {
     <!-- Own CSS -->
     <link rel="stylesheet" href="css/style.css">
 
-    <title>Tambah Data</title>
+    <title>Tambah Data Mahasiswa</title>
 </head>
 
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-uppercase">
         <div class="container">
-            <a class="navbar-brand" href="index.php">FTI UNMER</a>
+            <a class="navbar-brand" href="index.php">FTE Teknik Komputer</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -77,7 +76,7 @@ if (isset($_POST['simpan'])) {
     <div class="container">
         <div class="row my-2">
             <div class="col-md">
-                <h3 class="fw-bold text-uppercase"><i class="bi bi-person-plus-fill"></i>&nbsp;Tambah Data Mahasiswa FTI</h3>
+                <h3 class="fw-bold text-uppercase"><i class="bi bi-person-plus-fill"></i>&nbsp;Tambah Data Mahasiswa</h3>
             </div>
             <hr>
         </div>
@@ -86,7 +85,7 @@ if (isset($_POST['simpan'])) {
                 <form action="" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="nim" class="form-label">NIM Mahasiswa</label>
-                        <input type="number" class="form-control w-50" id="nis" placeholder="Masukkan NIM" min="1" name="nim" autocomplete="off" required>
+                        <input type="number" class="form-control w-50" id="nim" placeholder="Masukkan NIM" min="1" name="nim" autocomplete="off" required>
                     </div>
                     <div class="mb-3">
                         <label for="nama" class="form-label">Nama Lengkap</label>
