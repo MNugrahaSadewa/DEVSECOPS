@@ -2,7 +2,6 @@
 // Koneksi Database
 $koneksi = mysqli_connect("localhost", "root", "", "db_mahasiswa");
 
-<<<<<<< HEAD
 // Fungsi untuk mencatat log aktivitas
 function saveLog($action)
 {
@@ -51,24 +50,11 @@ function saveLog($action)
 // Fungsi untuk menjalankan query dalam bentuk array
 function query($query)
 {
-=======
-// membuat fungsi query dalam bentuk array
-function query($query)
-{
-    // Koneksi database
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
     global $koneksi;
 
     $result = mysqli_query($koneksi, $query);
 
-<<<<<<< HEAD
     $rows = [];
-=======
-    // membuat varibale array
-    $rows = [];
-
-    // mengambil semua data dalam bentuk array
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
     while ($row = mysqli_fetch_assoc($result)) {
         $rows[] = $row;
     }
@@ -76,11 +62,7 @@ function query($query)
     return $rows;
 }
 
-<<<<<<< HEAD
 // Fungsi tambah
-=======
-// Membuat fungsi tambah
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
 function tambah($data)
 {
     global $koneksi;
@@ -95,7 +77,6 @@ function tambah($data)
 
     mysqli_query($koneksi, $sql);
 
-<<<<<<< HEAD
     // Log aktivitas
     if (isset($_SESSION['user_id'])) {
         saveLog("menambahkan data mahasiswa dengan NIM $nim");
@@ -105,18 +86,11 @@ function tambah($data)
 }
 
 // Fungsi hapus
-=======
-    return mysqli_affected_rows($koneksi);
-}
-
-// Membuat fungsi hapus
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
 function hapus($nim)
 {
     global $koneksi;
 
     mysqli_query($koneksi, "DELETE FROM mahasiswa WHERE nim = $nim");
-<<<<<<< HEAD
 
     // Log aktivitas
     if (isset($_SESSION['user_id'])) {
@@ -127,12 +101,6 @@ function hapus($nim)
 }
 
 // Fungsi ubah
-=======
-    return mysqli_affected_rows($koneksi);
-}
-
-// Membuat fungsi ubah
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
 function ubah($data)
 {
     global $koneksi;
@@ -147,14 +115,11 @@ function ubah($data)
 
     mysqli_query($koneksi, $sql);
 
-<<<<<<< HEAD
     // Log aktivitas
     if (isset($_SESSION['user_id'])) {
         saveLog("mengubah data mahasiswa dengan NIM  $nim");
     }
 
-=======
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
     return mysqli_affected_rows($koneksi);
 }
 

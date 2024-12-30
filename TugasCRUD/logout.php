@@ -1,5 +1,4 @@
 <?php
-<<<<<<< HEAD
 error_reporting(0);
 session_start();
 require 'function.php'; // Pastikan file ini memuat fungsi saveLog
@@ -101,13 +100,3 @@ session_destroy();
 </body>
 
 </html>
-=======
-session_start();
-$_SESSION = [];
-session_unset();
-session_destroy();
-// Session dihapus dan logout
-
-header('location: index.php');
-    // kembali ke index.php
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586

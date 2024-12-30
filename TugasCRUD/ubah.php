@@ -31,13 +31,8 @@ if (isset($_POST['ubah'])) {
     }
 }
 
-<<<<<<< HEAD
 ?>
 
-=======
-
-?>
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
 <!DOCTYPE html>
 <html lang="en">
 
@@ -47,11 +42,7 @@ if (isset($_POST['ubah'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <!-- Bootstrap -->
-<<<<<<< HEAD
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet">
-=======
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl" crossorigin="anonymous">
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
     <!-- Bootstrap Icons -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.4.0/font/bootstrap-icons.css">
     <!-- Font Google -->
@@ -60,22 +51,14 @@ if (isset($_POST['ubah'])) {
     <!-- Own CSS -->
     <link rel="stylesheet" href="css/style.css">
 
-<<<<<<< HEAD
     <title>Ubah Data Mahasiswa</title>
-=======
-    <title>Tambah Data</title>
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
 </head>
 
 <body>
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark text-uppercase">
         <div class="container">
-<<<<<<< HEAD
             <a class="navbar-brand" href="index.php">FTE Teknik Komputer</a>
-=======
-            <a class="navbar-brand" href="index.php"> FTE Teknik Komputer</a>
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
@@ -106,7 +89,6 @@ if (isset($_POST['ubah'])) {
         </div>
         <div class="row my-2">
             <div class="col-md">
-<<<<<<< HEAD
                 <form action="" method="post">
                     <div class="mb-3">
                         <label for="nim" class="form-label">NIM</label>
@@ -127,29 +109,6 @@ if (isset($_POST['ubah'])) {
                     <div class="mb-3">
                         <label for="semester" class="form-label">Semester</label>
                         <input type="number" class="form-control w-50" id="semester" value="<?= htmlspecialchars($siswa['semester']); ?>" name="semester" autocomplete="off" required>
-=======
-                <form action="" method="post" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="nim" class="form-label">NIM</label>
-                        <input type="number" class="form-control w-50" id="nim" value="<?= $siswa['nim']; ?>" name="nim" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="nama" class="form-label">Nama</label>
-                        <input type="text" class="form-control w-50" id="nama" value="<?= $siswa['nama']; ?>" name="nama" autocomplete="off" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="kelas" class="form-label">Kelas</label>
-                        <input type="text" class="form-control w-50" id="kelas" value="<?= $siswa['kelas']; ?>" name="kelas" autocomplete="off" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="jurusan" class="form-label">Jurusan</label>
-                        <input type="text" class="form-control w-50" id="jurusan" value="<?= $siswa['jurusan']; ?>" name="jurusan" autocomplete="off" required>
-                    </div>
-                    </div>
-                    <div class="mb-3">
-                        <label for="semester" class="form-label">Semester</label>
-                        <input type="number" class="form-control w-50" id="semester" value="<?= $siswa['semester']; ?>" name="semester" autocomplete="off" required>
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
                     </div>
                     <hr>
                     <a href="index.php" class="btn btn-secondary">Kembali</a>
@@ -161,14 +120,7 @@ if (isset($_POST['ubah'])) {
     <!-- Close Container -->
 
     <!-- Bootstrap -->
-<<<<<<< HEAD
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 
 </html>
-=======
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/js/bootstrap.bundle.min.js" integrity="sha384-b5kHyXgcpbZJO/tY9Ul7kGkf1S0CWuKcCD38l8YkeH8z8QjE0GmW1gYU5S9FOnJ0" crossorigin="anonymous"></script>
-</body>
-
-</html>
->>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
