@@ -65,7 +65,11 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
     <!-- Tampilkan preloader -->
     <div class="preloader">
     <div class="loading">
+<<<<<<< HEAD
     <img src="img/bg/TK.png" width="80">
+=======
+    <img src="img/poi.gif" width="80">
+>>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
     <p>Harap Tunggu...</p>
   </div>
 </div>
@@ -82,7 +86,11 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
                         <a class="nav-link" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
+<<<<<<< HEAD
                         <a class="nav-link" href="log.php">Log</a>
+=======
+                        <a class="nav-link" href="#about">About</a>
+>>>>>>> a67532a4b2ce44771176fd4e02eee5a5d8b71586
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php">Logout</a>
