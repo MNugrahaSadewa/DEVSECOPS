@@ -82,7 +82,7 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
                         <a class="nav-link" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#about">About</a>
+                        <a class="nav-link" href="log.php">Log</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php">Logout</a>
