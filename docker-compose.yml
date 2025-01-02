@@ -1,30 +1,32 @@
+version: '3.8'
 
 services:
   app:
     build:
       context: .
       dockerfile: Dockerfile
-    ports:
-      - "8081:80" # Port 8080 untuk mengakses aplikasi
+    container_name: php_app
     volumes:
-      - ./TugasCRUD:/var/www/html # Sinkronisasi folder TugasCRUD ke /var/www/html
+      - ./TugasCRUD:/var/www/html
+    ports:
+      - "8080:80"
     depends_on:
       - db
-    environment:
-      MYSQL_HOST: db
-      MYSQL_USER: root
-      MYSQL_PASSWORD: yourpassword
-      MYSQL_DATABASE: db_mahasiswa
 
   db:
     image: mysql:8.0
+    container_name: mysql_db
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: yourpassword
-      MYSQL_DATABASE: db_mahasiswa
-    volumes:
-      - db-data:/var/lib/mysql
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mahasiswa
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
     ports:
-      - "3308:3306" # Gunakan port 3307 jika MySQL lokal sudah menggunakan port 3306
+      - "3306:3306"
+    volumes:
+      - db_data:/var/lib/mysql
+      - ./db_mahasiswa.sql:/docker-entrypoint-initdb.d/db_mahasiswa.sql
 
 volumes:
-  db-data:
+  db_data:

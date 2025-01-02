@@ -1,19 +1,64 @@
 <?php
-// Koneksi Database
-$koneksi = mysqli_connect("db", "root", "yourpassword", "db_mahasiswa", 3306);
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 
-// membuat fungsi query dalam bentuk array
+// Koneksi Database
+$koneksi = mysqli_connect("db", "user", "password", "mahasiswa");
+
+// Fungsi untuk mencatat log aktivitas
+function saveLog($action)
+{
+    global $koneksi;
+
+    // Ambil user ID dari sesi
+    // session_start(); // Pastikan sesi dimulai
+    if (isset($_SESSION['user_id'])) {
+        $user_id = $_SESSION['user_id'];
+    } else {
+        $user_id = null; // User ID default jika sesi tidak tersedia
+    }
+
+    // Sanitasi input
+    $action = htmlspecialchars($action, ENT_QUOTES);
+
+    // Periksa apakah user_id valid
+    if ($user_id) {
+        $result = mysqli_query($koneksi, "SELECT id, username FROM admin WHERE id = '$user_id'");
+        $user = mysqli_fetch_assoc($result);
+        if (!$user) {
+            die("Error: User ID tidak valid. Tidak dapat mencatat log.");
+        }
+        $username = $user['username'];
+
+        // Atur pesan log berdasarkan aksi
+        if ($action === 'logged in') {
+            $action_message = "Admin $username logged in"; // Contoh: "Admin 25 logged in"
+        } elseif ($action === 'logged out') {
+            $action_message = "Admin $username logged out"; // Contoh: "Admin 25 logged out"
+        } else {
+            $action_message = "Admin $username melakukan aksi $action"; // Jika aksi lain
+        }
+    } 
+    else {
+        die("Error: Tidak dapat mencatat log karena sesi user ID tidak tersedia.");
+    }
+
+    // Simpan log ke database
+    $sql = "INSERT INTO logs (user_id, action) VALUES ('$user_id', '$action_message')";
+    if (!mysqli_query($koneksi, $sql)) {
+        die("Error: " . mysqli_error($koneksi)); // Debug jika terjadi error
+    }
+}
+
+// Fungsi untuk menjalankan query dalam bentuk array
 function query($query)
 {
-    // Koneksi database
     global $koneksi;
 
     $result = mysqli_query($koneksi, $query);
 
-    // membuat varibale array
     $rows = [];
-
-    // mengambil semua data dalam bentuk array
     while ($row = mysqli_fetch_assoc($result)) {
         $rows[] = $row;
     }
@@ -21,7 +66,7 @@ function query($query)
     return $rows;
 }
 
-// Membuat fungsi tambah
+// Fungsi tambah
 function tambah($data)
 {
     global $koneksi;
@@ -36,19 +81,30 @@ function tambah($data)
 
     mysqli_query($koneksi, $sql);
 
+    // Log aktivitas
+    if (isset($_SESSION['user_id'])) {
+        saveLog("menambahkan data mahasiswa dengan NIM $nim");
+    }
+
     return mysqli_affected_rows($koneksi);
 }
 
-// Membuat fungsi hapus
+// Fungsi hapus
 function hapus($nim)
 {
     global $koneksi;
 
     mysqli_query($koneksi, "DELETE FROM mahasiswa WHERE nim = $nim");
+
+    // Log aktivitas
+    if (isset($_SESSION['user_id'])) {
+        saveLog("menghapus data mahasiswa dengan NIM $nim");
+    }
+
     return mysqli_affected_rows($koneksi);
 }
 
-// Membuat fungsi ubah
+// Fungsi ubah
 function ubah($data)
 {
     global $koneksi;
@@ -62,6 +118,11 @@ function ubah($data)
     $sql = "UPDATE mahasiswa SET nama = '$nama', kelas = '$kelas', jurusan = '$jurusan', semester = '$semester' WHERE nim = $nim";
 
     mysqli_query($koneksi, $sql);
+
+    // Log aktivitas
+    if (isset($_SESSION['user_id'])) {
+        saveLog("mengubah data mahasiswa dengan NIM  $nim");
+    }
 
     return mysqli_affected_rows($koneksi);
 }
