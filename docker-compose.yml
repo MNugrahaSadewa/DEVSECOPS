@@ -22,6 +22,7 @@ services:
       MYSQL_DATABASE: mahasiswa
       MYSQL_USER: user
       MYSQL_PASSWORD: password
+      MYSQL_INIT_COMMAND:SET GLOBAL host_cache_size=0;
     ports:
       - "3306:3306"
     volumes:
