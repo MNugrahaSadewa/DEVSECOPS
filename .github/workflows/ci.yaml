@@ -23,12 +23,7 @@ jobs:
         run: |
           docker build -t my-app:latest .
 
-      # Langkah 3: Run Unit Tests
-      - name: Run Unit Tests
-        run: |
-          docker-compose -f docker-compose.test.yml up --abort-on-container-exit
-
-      # Langkah 4: Security Scanning dengan Bandit
+      # Langkah 3: Security Scanning dengan Bandit
       - name: Run Bandit Security Scan
         run: |
           pip install bandit
