@@ -7,41 +7,44 @@ on:
       - Tes
   pull_request:
     branches:
-      - main
+      - '*'
 
 jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-      # Langkah 1: Checkout kode
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      # Langkah 2: Install Docker
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # Langkah 3: Install Docker Compose
       - name: Install Docker Compose
         run: |
-          sudo curl -L "https://github.com/docker/compose/releases/download/v2.20.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          VERSION=$(curl -s https://api.github.com/repos/docker/compose/releases/latest | jq -r '.tag_name')
+          sudo curl -L "https://github.com/docker/compose/releases/download/${VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose --version
 
-      # Langkah 4: Build Stage
+      - name: Validate Dockerfile
+        run: |
+          if [ ! -f Dockerfile ]; then echo "Dockerfile not found!"; exit 1; fi
+
       - name: Build Docker Image
         run: |
           docker build -t my-app:latest .
 
-      # Langkah 5: Run Unit Tests
       - name: Run Unit Tests
         run: |
-          docker-compose -f docker-compose.yml up --abort-on-container-exit
+          docker-compose -f docker-compose.yml up --abort-on-container-exit || exit 1
+          docker-compose logs > test-logs.txt
+          cat test-logs.txt
 
-      # Langkah 6: Security Scanning dengan Bandit
       - name: Run Bandit Security Scan
         run: |
+          python -m venv venv
+          source venv/bin/activate
           pip install bandit
           bandit -r . --severity-level high || exit 1
 
@@ -51,8 +54,7 @@ jobs:
     if: success()
 
     steps:
-      # Deploy aplikasi ke staging
       - name: Deploy to Staging
         run: |
-          docker-compose -f docker-compose.staging.yml down
-          docker-compose -f docker-compose.staging.yml up -d
+          docker-compose -f docker-compose.staging.yml down || true
+          docker-compose -f docker-compose.staging.yml up -d || (echo "Deploy failed! Rolling back..." && docker-compose -f docker-compose.staging.yml down && exit 1)
