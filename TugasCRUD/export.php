@@ -6,7 +6,7 @@ require 'function.php';
 $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
 
 // Membuat nama file
-$filename = "data mahasiswa fti-" . date('Ymd') . ".xls";
+$filename = "data mahasiswa FTE-" . date('Ymd') . ".xls";
 
 // export ke excel
 header("Content-type: application/vnd-ms-excel");
