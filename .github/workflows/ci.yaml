@@ -29,7 +29,7 @@ jobs:
 
       # Security Scanning Stage (SAST)
       - name: Run SonarQube Scan
-        uses: SonarSource/sonarcloud-github-action@v1.11
+        uses: SonarSource/sonarcloud-github-action@v1.13
         with:
           projectKey: your-project-key
           organization: your-organization
