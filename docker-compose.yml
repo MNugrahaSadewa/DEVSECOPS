@@ -1,0 +1,30 @@
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8081:80" # Port 8080 untuk mengakses aplikasi
+    volumes:
+      - ./TugasCRUD:/var/www/html # Sinkronisasi folder TugasCRUD ke /var/www/html
+    depends_on:
+      - db
+    environment:
+      MYSQL_HOST: db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: yourpassword
+      MYSQL_DATABASE: db_mahasiswa
+
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: yourpassword
+      MYSQL_DATABASE: db_mahasiswa
+    volumes:
+      - db-data:/var/lib/mysql
+    ports:
+      - "3308:3306" # Gunakan port 3307 jika MySQL lokal sudah menggunakan port 3306
+
+volumes:
+  db-data:
