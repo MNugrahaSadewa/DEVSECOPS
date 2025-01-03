@@ -19,17 +19,62 @@ jobs:
     - name: Set up PHP
       uses: shivammathur/setup-php@v2
       with:
-        php-version: '8.2'
+        php-version: '8.1'
         tools: composer
 
     # Step 3: Install dependencies
     - name: Install Dependencies
       run: |
+        composer validate
         composer install
 
-    # Step 4: Run PHPUnit tests
+    # Step 4: Build Stage
+    - name: Build Project
+      run: |
+        echo "Build stage: Ensure the project is packaged or compiled if necessary."
+        # Tambahkan langkah build spesifik jika diperlukan untuk proyek Anda.
+
+    # Step 5: Test Stage
     - name: Run Unit Tests
       run: |
-        vendor/bin/phpunit --version
-        vendor/bin/phpunit
+        vendor/bin/phpunit --debug
+
+    # Step 6: Security Scanning Stage (SAST)
+    - name: Security Scan with PHPStan
+      run: |
+        composer require --dev phpstan/phpstan
+        vendor/bin/phpstan analyse src/ --level=max
+
+  testing-dast:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up OWASP ZAP for DAST
+    - name: Run OWASP ZAP
+      uses: zaproxy/action-full-scan@v0.5.0
+      with:
+        target: 'http://localhost:8000' # Ganti URL dengan environment test Anda
+        fail_on_warn: true
+      env:
+        JAVA_OPTS: '-Djava.awt.headless=true'
+
+  deploy-to-staging:
+    needs: testing-dast
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Deploy to Staging
+    - name: Deploy to Staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Tambahkan langkah deployment otomatis, seperti menggunakan Docker atau SCP
 
