@@ -1,15 +1,11 @@
 <?php
 
-require 'function.php';
+require 'function.php'; // Pastikan jalur file sudah benar
 
-$username = $_POST['username'];
-$password = md5($_POST['password']);
-
-
-//pengecekan kelengkapan data
-if (empty($username) || empty($password)) {
-    header("location: register.php");
-} else {
-    mysqli_query($koneksi, "INSERT INTO admin(username, password) VALUES ('$username', '$password')");
-    header("location: index.php");
+// Validasi koneksi database
+if (!isset($koneksi)) {
+    die("Koneksi database belum tersedia.");
 }
+
+if (!$koneksi &#8203;:contentReference[oaicite:0]{index=0}&#8203;
+
