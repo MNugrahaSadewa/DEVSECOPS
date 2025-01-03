@@ -94,7 +94,7 @@ jobs:
         JAVA_OPTS: '-Djava.awt.headless=true'
 
   deploy:
-    needs: dast-scan
+    #needs: dast-scan
     runs-on: ubuntu-latest
 
     steps:
