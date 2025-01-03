@@ -10,11 +10,5 @@ body{
     display: inline-block;
     margin-top: 20px;
     margin-right: 10px;
-    color: #ffffff;
+    color: #fff;
 }
-
-
-#loader {
-    width: 300px;
-    height: 300px;
-  }

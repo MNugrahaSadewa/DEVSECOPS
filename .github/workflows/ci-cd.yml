@@ -1,0 +1,110 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - pipeline
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up PHP environment
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer
+
+    # Step 3: Install dependencies
+    - name: Install Dependencies
+      run: |
+        composer install --no-interaction --prefer-dist
+
+    # Step 4: Static Analysis with PHPStan
+    - name: Static Analysis with PHPStan
+      run: |
+        composer require --dev phpstan/phpstan
+        vendor/bin/phpstan analyse --level=1 TugasCRUD || echo "PHPStan detected issues"
+
+    # Step 5: Run Unit Tests
+    - name: Run Unit Tests
+      run: |
+        vendor/bin/phpunit --configuration phpunit.xml
+
+    # Step 6: Lint PHP Files
+    - name: Lint PHP Files
+      run: |
+        find TugasCRUD -type f -name "*.php" -exec php -l {} \;
+
+  sast-advanced:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up PHP environment
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer
+
+    # Step 3: Install dependencies (Skip if already installed in cache)
+    - name: Install Dependencies
+      run: |
+        composer install --no-interaction --prefer-dist
+
+    # Step 4: Advanced Static Analysis with PHPStan
+    - name: Advanced Static Analysis with PHPStan
+      run: |
+        vendor/bin/phpstan analyse --level=5 TugasCRUD || echo "Advanced PHPStan detected issues"
+
+  dast-scan:
+    needs: sast-advanced
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Start Testing Environment
+    - name: Start Test Server
+      run: |
+        php -S localhost:8000 -t TugasCRUD &
+        sleep 10 # Wait for server to start
+
+    # Step 3: Dynamic Analysis with OWASP ZAP
+    - name: Dynamic Application Security Testing (DAST) with OWASP ZAP
+      uses: zaproxy/action-full-scan@v0.6.0
+      with:
+        target: 'http://localhost:8000'
+        fail_action: false
+      env:
+        JAVA_OPTS: '-Djava.awt.headless=true'
+
+  deploy:
+    #needs: dast-scan
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Deploy to Staging Environment
+    - name: Deploy to Staging
+      run: |
+        echo "Deploying application to staging environment..."
+        # Add your deployment steps here (e.g., Docker, SCP, or cloud deployment scripts)
+

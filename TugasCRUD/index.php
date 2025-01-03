@@ -65,7 +65,7 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
     <!-- Tampilkan preloader -->
     <div class="preloader">
     <div class="loading">
-    <img src="img/load.gif" width="80">
+    <img src="img/poi.gif" width="80">
     <p>Harap Tunggu...</p>
   </div>
 </div>
@@ -82,7 +82,7 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
                         <a class="nav-link" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="log.php">Log</a>
+                        <a class="nav-link" href="#about">About</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="logout.php">Logout</a>
@@ -105,7 +105,6 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
             <div class="col-md">
                 <a href="addData.php" class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp;Tambah Data</a>
                 <a href="export.php" target="_blank" class="btn btn-success ms-1"><i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Ekspor ke Excel</a>
-                <a href="upload.php" class="btn btn-outline-danger ms-1"><i class="bi bi-file-earmark-arrow-up-fill"></i>&nbsp;Import Data</a>
             </div>
         </div>
         <div class="row my-3">
