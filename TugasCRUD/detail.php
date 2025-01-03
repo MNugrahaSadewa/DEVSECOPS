@@ -1,42 +1,44 @@
 <?php
-// Memanggil atau membutuhkan file function.php
-require 'function.php';
+require_once 'function.php'; // Memuat koneksi database
 
-// Jika Data Mahasiswa diklik maka
+/** @var mysqli $koneksi */
+if (!$koneksi) {
+    die("Koneksi database gagal: " . mysqli_connect_error());
+}
+
+// Jika Data Mahasiswa diklik
 if (isset($_POST['dataSiswa'])) {
     $output = '';
-
-    // mengambil data Mahasiswa dari nim 
-    $sql = "SELECT * FROM mahasiswa WHERE nim = '" . $_POST['dataSiswa'] . "'";
-    $result = mysqli_query($koneksi, $sql);
-
-    $output .= '<div class="table-responsive">
-                        <table class="table table-bordered">';
-    foreach ($result as $row) {
-        $output .= '
-                        <tr>
-                            <th width="40%">NIM</th>
-                            <td width="60%">' . $row['nim'] . '</td>
-                        </tr>
-                        <tr>
-                            <th width="40%">Nama</th>
-                            <td width="60%">' . $row['nama'] . '</td>
-                        </tr>
-                        <tr>
-                            <th width="40%">Kelas</th>
-                            <td width="60%">' . $row['kelas'] . '</td>
-                        </tr>
-                        <tr>
-                            <th width="40%">Jurusan</th>
-                            <td width="60%">' . $row['jurusan'] . '</td>
-                        </tr>
-                        <tr>
-                            <th width="40%">Semester</th>
-                            <td width="60%">' . $row['semester'] . '</td>
-                        </tr>
-                        ';
+    $dataSiswa = isset($_POST['dataSiswa']) ? trim((string)$_POST['dataSiswa']) : '';
+    if ($dataSiswa === '') {
+        die("NIM tidak boleh kosong.");
     }
-    $output .= '</table></div>';
-    // Tampilkan $output
+
+    $stmt = $koneksi->prepare("SELECT * FROM mahasiswa WHERE nim = ?");
+    if ($stmt === false) {
+        die("Query gagal dipersiapkan: " . $koneksi->error);
+    }
+
+    $stmt->bind_param("s", $dataSiswa);
+    if (!$stmt->execute()) {
+        die("Eksekusi query gagal: " . $stmt->error);
+    }
+
+    $result = $stmt->get_result();
+    if ($result->num_rows > 0) {
+        $output .= '<div class="table-responsive"><table class="table table-bordered">';
+        while ($row = $result->fetch_assoc()) {
+            $output .= '
+                <tr><th>NIM</th><td>' . htmlspecialchars($row['nim']) . '</td></tr>
+                <tr><th>Nama</th><td>' . htmlspecialchars($row['nama']) . '</td></tr>
+                <tr><th>Kelas</th><td>' . htmlspecialchars($row['kelas']) . '</td></tr>
+                <tr><th>Jurusan</th><td>' . htmlspecialchars($row['jurusan']) . '</td></tr>
+                <tr><th>Semester</th><td>' . htmlspecialchars($row['semester']) . '</td></tr>';
+        }
+        $output .= '</table></div>';
+    } else {
+        $output = "Data tidak ditemukan.";
+    }
     echo $output;
 }
+
