@@ -25,15 +25,36 @@ if (isset($_POST['dataSiswa'])) {
     }
 
     $result = $stmt->get_result();
+    if ($result === false) {
+        die("Pengambilan hasil query gagal: " . $stmt->error);
+    }
+
+    // Cek apakah ada data
     if ($result->num_rows > 0) {
-        $output .= '<div class="table-responsive"><table class="table table-bordered">';
+        $output .= '<div class="table-responsive">
+                        <table class="table table-bordered">';
         while ($row = $result->fetch_assoc()) {
             $output .= '
-                <tr><th>NIM</th><td>' . htmlspecialchars($row['nim']) . '</td></tr>
-                <tr><th>Nama</th><td>' . htmlspecialchars($row['nama']) . '</td></tr>
-                <tr><th>Kelas</th><td>' . htmlspecialchars($row['kelas']) . '</td></tr>
-                <tr><th>Jurusan</th><td>' . htmlspecialchars($row['jurusan']) . '</td></tr>
-                <tr><th>Semester</th><td>' . htmlspecialchars($row['semester']) . '</td></tr>';
+                        <tr>
+                            <th width="40%">NIM</th>
+                            <td width="60%">' . htmlspecialchars((string)$row['nim']) . '</td>
+                        </tr>
+                        <tr>
+                            <th width="40%">Nama</th>
+                            <td width="60%">' . htmlspecialchars((string)$row['nama']) . '</td>
+                        </tr>
+                        <tr>
+                            <th width="40%">Kelas</th>
+                            <td width="60%">' . htmlspecialchars((string)$row['kelas']) . '</td>
+                        </tr>
+                        <tr>
+                            <th width="40%">Jurusan</th>
+                            <td width="60%">' . htmlspecialchars((string)$row['jurusan']) . '</td>
+                        </tr>
+                        <tr>
+                            <th width="40%">Semester</th>
+                            <td width="60%">' . htmlspecialchars((string)$row['semester']) . '</td>
+                        </tr>';
         }
         $output .= '</table></div>';
     } else {
