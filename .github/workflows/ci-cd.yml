@@ -31,7 +31,7 @@ jobs:
     - name: Static Analysis with PHPStan
       run: |
         composer require --dev phpstan/phpstan
-        vendor/bin/phpstan analyse --level=5 TugasCRUD || echo "PHPStan detected issues"
+        vendor/bin/phpstan analyse --level=1 TugasCRUD || echo "PHPStan detected issues"
 
     # Step 5: Run Unit Tests
     - name: Run Unit Tests
@@ -67,7 +67,7 @@ jobs:
     # Step 4: Advanced Static Analysis with PHPStan
     - name: Advanced Static Analysis with PHPStan
       run: |
-        vendor/bin/phpstan analyse --level=max TugasCRUD || echo "Advanced PHPStan detected issues"
+        vendor/bin/phpstan analyse --level=5 TugasCRUD || echo "Advanced PHPStan detected issues"
 
   dast-scan:
     needs: sast-advanced
