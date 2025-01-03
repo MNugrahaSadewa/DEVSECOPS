@@ -65,7 +65,7 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
     <!-- Tampilkan preloader -->
     <div class="preloader">
     <div class="loading">
-    <img src="img/poi.gif" width="80">
+    <img src="img/load.gif" width="80">
     <p>Harap Tunggu...</p>
   </div>
 </div>
@@ -105,6 +105,7 @@ $siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
             <div class="col-md">
                 <a href="addData.php" class="btn btn-primary"><i class="bi bi-person-plus-fill"></i>&nbsp;Tambah Data</a>
                 <a href="export.php" target="_blank" class="btn btn-success ms-1"><i class="bi bi-file-earmark-spreadsheet-fill"></i>&nbsp;Ekspor ke Excel</a>
+                <a href="upload.php" class="btn btn-outline-danger ms-1"><i class="bi bi-file-earmark-arrow-up-fill"></i>&nbsp;Import Data</a>
             </div>
         </div>
         <div class="row my-3">
