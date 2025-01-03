@@ -3,7 +3,7 @@ name: PHP CI/CD Pipeline
 on:
   push:
     branches:
-      - main  # Ganti dengan nama branch yang kamu inginkan jika berbeda
+      - main  # Ganti dengan branch yang kamu inginkan
 
 jobs:
   build:
@@ -23,24 +23,25 @@ jobs:
       # 3. Install dependensi menggunakan Composer
       - name: Install dependencies
         run: |
-          cd DEVSECOPS  # Pindah ke folder yang benar (jika file composer.json ada di dalam folder ini)
-          composer install
+          cd DEVSECOPS  # Pindah ke folder DEVSECOPS
+          composer install  # Menginstal dependensi yang ada di composer.json
 
       # 4. Jalankan unit tests menggunakan PHPUnit
       - name: Run tests
         run: |
-          cd DEVSECOPS  # Pastikan di direktori yang tepat
-          vendor/bin/phpunit --configuration phpunit.xml
+          cd DEVSECOPS  # Pindah ke folder DEVSECOPS
+          vendor/bin/phpunit --configuration phpunit.xml  # Jalankan pengujian unit
 
       # 5. Jalankan alat SAST (Static Analysis Tool) untuk analisis kerentanannya
       - name: Run security scanning with PHPStan
         run: |
-          cd DEVSECOPS
-          composer require --dev phpstan/phpstan
-          vendor/bin/phpstan analyze
+          cd DEVSECOPS  # Pindah ke folder DEVSECOPS
+          composer require --dev phpstan/phpstan  # Install PHPStan untuk analisis statis
+          vendor/bin/phpstan analyze  # Jalankan PHPStan untuk menganalisis kode
 
       # 6. Deploy ke staging environment (opsional)
       - name: Deploy to Staging Environment
         run: |
-          # Perintah untuk deployment ke staging environment
-          echo "Deploying to staging..."
+          cd DEVSECOPS  # Pindah ke folder DEVSECOPS
+          echo "Deploying to staging..."  # Tambahkan perintah deployment ke env staging
+
