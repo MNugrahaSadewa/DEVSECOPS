@@ -1,0 +1,46 @@
+name: PHP CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main  # Ganti dengan nama branch yang kamu inginkan jika berbeda
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout kode dari GitHub
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # 2. Setup PHP
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '7.4'  # Sesuaikan dengan versi PHP yang dibutuhkan
+
+      # 3. Install dependensi menggunakan Composer
+      - name: Install dependencies
+        run: |
+          cd DEVSECOPS  # Pindah ke folder yang benar (jika file composer.json ada di dalam folder ini)
+          composer install
+
+      # 4. Jalankan unit tests menggunakan PHPUnit
+      - name: Run tests
+        run: |
+          cd DEVSECOPS  # Pastikan di direktori yang tepat
+          vendor/bin/phpunit --configuration phpunit.xml
+
+      # 5. Jalankan alat SAST (Static Analysis Tool) untuk analisis kerentanannya
+      - name: Run security scanning with PHPStan
+        run: |
+          cd DEVSECOPS
+          composer require --dev phpstan/phpstan
+          vendor/bin/phpstan analyze
+
+      # 6. Deploy ke staging environment (opsional)
+      - name: Deploy to Staging Environment
+        run: |
+          # Perintah untuk deployment ke staging environment
+          echo "Deploying to staging..."
