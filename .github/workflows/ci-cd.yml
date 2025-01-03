@@ -43,7 +43,7 @@ jobs:
     - name: Security Scan with PHPStan
       run: |
         composer require --dev phpstan/phpstan
-        vendor/bin/phpstan analyse src/ --level=max
+        vendor/bin/phpstan analyse . --level=max
 
   testing-dast:
     needs: build-and-test
