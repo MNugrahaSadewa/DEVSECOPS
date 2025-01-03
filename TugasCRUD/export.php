@@ -13,20 +13,18 @@ if ($result === false) {
     die("Pengambilan data gagal: " . $koneksi->error);
 }
 
+// Proses data hanya jika ada hasil
 if ($result->num_rows > 0) {
     $data = [];
     while ($row = $result->fetch_assoc()) {
-        $data[] = $row;
+        $data[] = $row; // Tambahkan hasil query ke dalam array
     }
 
-    // Validasi apakah $data iterable sebelum foreach
-    if (is_iterable($data)) {
-        foreach ($data as $row) {
-            $nama = isset($row['nama']) ? $row['nama'] : 'Nama tidak ditemukan';
-            echo "Nama: $nama<br>";
-        }
-    } else {
-        die("Data tidak valid untuk iterasi.");
+    // Iterasi langsung tanpa memeriksa dengan is_iterable(), karena $data selalu iterable
+    foreach ($data as $row) {
+        // Validasi nilai setiap kolom sebelum digunakan
+        $nama = isset($row['nama']) ? htmlspecialchars((string)$row['nama']) : 'Nama tidak ditemukan';
+        echo "Nama: $nama<br>";
     }
 } else {
     echo "Tidak ada data.";
