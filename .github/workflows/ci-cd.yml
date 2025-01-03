@@ -1,47 +1,41 @@
-name: PHP CI/CD Pipeline
+name: CI/CD Pipeline
 
 on:
   push:
     branches:
-      - main  # Ganti dengan branch yang kamu inginkan
+      - pipeline  # Gantilah dengan branch yang sesuai jika perlu
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Checkout kode dari GitHub
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # 2. Setup PHP
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '7.4'  # Sesuaikan dengan versi PHP yang dibutuhkan
+          php-version: '7.4'  # Ganti dengan versi PHP yang kamu butuhkan
 
-      # 3. Install dependensi menggunakan Composer
       - name: Install dependencies
         run: |
-          cd DEVSECOPS  # Pindah ke folder DEVSECOPS
-          composer install  # Menginstal dependensi yang ada di composer.json
+          composer install
 
-      # 4. Jalankan unit tests menggunakan PHPUnit
-      - name: Run tests
+      - name: Run Tests
         run: |
-          cd DEVSECOPS  # Pindah ke folder DEVSECOPS
-          vendor/bin/phpunit --configuration phpunit.xml  # Jalankan pengujian unit
+          php vendor/bin/phpunit  # Sesuaikan dengan perintah tes yang digunakan
 
-      # 5. Jalankan alat SAST (Static Analysis Tool) untuk analisis kerentanannya
-      - name: Run security scanning with PHPStan
+      - name: Security Scan with SonarQube
         run: |
-          cd DEVSECOPS  # Pindah ke folder DEVSECOPS
-          composer require --dev phpstan/phpstan  # Install PHPStan untuk analisis statis
-          vendor/bin/phpstan analyze  # Jalankan PHPStan untuk menganalisis kode
+          # Jalankan perintah untuk memeriksa keamanan, contoh menggunakan SonarQube
+          sonar-scanner
 
-      # 6. Deploy ke staging environment (opsional)
-      - name: Deploy to Staging Environment
+      - name: Deploy to Staging
         run: |
-          cd DEVSECOPS  # Pindah ke folder DEVSECOPS
-          echo "Deploying to staging..."  # Tambahkan perintah deployment ke env staging
+          # Perintah untuk deployment ke environment staging
+          echo "Deploying to staging"
+
+
+
 
