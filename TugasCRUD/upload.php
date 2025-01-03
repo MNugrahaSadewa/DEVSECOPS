@@ -2,11 +2,18 @@
 session_start();
 require 'function.php';
 
+// Pastikan koneksi database tersedia
+if (!isset($koneksi) || !$koneksi instanceof mysqli) {
+    die("Koneksi database tidak valid.");
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
     $file = $_FILES['csv_file']['tmp_name'];
 
     if (($handle = fopen($file, 'r')) !== false) {
         fgetcsv($handle); // Lewati header CSV
+        $stmt = $koneksi->prepare("INSERT INTO mahasiswa (nim, nama, kelas, jurusan, semester) VALUES (?, ?, ?, ?, ?)");
+
         while (($data = fgetcsv($handle, 1000, ',')) !== false) {
             $nim = htmlspecialchars($data[0]);
             $nama = htmlspecialchars($data[1]);
@@ -14,14 +21,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
             $jurusan = htmlspecialchars($data[3]);
             $semester = htmlspecialchars($data[4]);
 
-            $query = "INSERT INTO mahasiswa (nim, nama, kelas, jurusan, semester) 
-                      VALUES ('$nim', '$nama', '$kelas', '$jurusan', '$semester')";
-            mysqli_query($koneksi, $query);
+            // Gunakan prepared statement
+            $stmt->bind_param('sssss', $nim, $nama, $kelas, $jurusan, $semester);
+            $stmt->execute();
 
             // Log aktivitas
-            $user_id = $_SESSION['user_id'];
-            saveLog( "Admin menambahkan data mahasiswa: NIM $nim");
+            $user_id = $_SESSION['user_id'] ?? 0; // Pastikan user_id ada, gunakan default 0 jika tidak ada
+            if (function_exists('saveLog')) {
+                saveLog("Admin menambahkan data mahasiswa: NIM $nim");
+            } else {
+                // Jika saveLog tidak ada, catat error ke log server
+                error_log("Function saveLog tidak ditemukan.");
+            }
         }
+
         fclose($handle);
 
         echo "<script>alert('Data berhasil diunggah!'); window.location='index.php';</script>";
@@ -30,7 +43,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
     }
 }
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -86,3 +98,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+
