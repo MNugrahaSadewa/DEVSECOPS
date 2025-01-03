@@ -42,7 +42,7 @@ jobs:
     # Step 6: Security Scanning Stage (SAST) with SonarQube
     - name: Install SonarQube Scanner
       run: |
-        wget -qO- https://dl.bintray.com/sonarsource/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip > sonar-scanner.zip
+        wget -qO- https://github.com/SonarSource/sonar-scanner-cli/releases/download/4.6.2.2472/sonar-scanner-cli-4.6.2.2472-linux.zip > sonar-scanner.zip
         unzip sonar-scanner.zip -d $HOME/sonar-scanner
         export PATH=$PATH:$HOME/sonar-scanner/sonar-scanner-4.6.2.2472-linux/bin
 
@@ -84,4 +84,5 @@ jobs:
       run: |
         echo "Deploying to staging environment..."
         # Tambahkan langkah deployment otomatis, seperti menggunakan Docker atau SCP
+
 
