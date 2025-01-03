@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - pipeline
+      - merger
 
 jobs:
   build-and-test:
