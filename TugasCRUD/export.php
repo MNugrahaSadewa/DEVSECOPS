@@ -1,40 +1,34 @@
 <?php
-// Memanggil atau membutuhkan file function.php
-require 'function.php';
+require_once 'function.php'; // Memuat koneksi database
 
-// Menampilkan semua data dari table Mahasiswa berdasarkan nim secara Descending
-$siswa = query("SELECT * FROM mahasiswa ORDER BY nim DESC");
+/** @var mysqli $koneksi */
+if (!$koneksi) {
+    die("Koneksi database gagal: " . mysqli_connect_error());
+}
 
-// Membuat nama file
-$filename = "data mahasiswa fti-" . date('Ymd') . ".xls";
+$query = "SELECT * FROM mahasiswa";
+$result = $koneksi->query($query);
 
-// export ke excel
-header("Content-type: application/vnd-ms-excel");
-header("Content-Disposition: attachment; filename=Data Siswa.xls");
+if ($result === false) {
+    die("Pengambilan data gagal: " . $koneksi->error);
+}
 
-?>
-<table class="text-center" border="1">
-    <thead class="text-center">
-        <tr>
-            <th>No.</th>
-            <th>Nama</th>
-            <th>NIM</th>
-            <th>Kelas</th>
-            <th>Jurusan</th>
-            <th>Semester</th>
-        </tr>
-    </thead>
-    <tbody class="text-center">
-        <?php $no = 1; ?>
-        <?php foreach ($siswa as $row) : ?>
-            <tr>
-            <td><?= $no++; ?></td>
-            <td><?= $row['nama']; ?></td>
-            <td><?= $row['nim']; ?></td>
-            <td><?= $row['kelas']; ?></td>
-            <td><?= $row['jurusan']; ?></td>
-            <td><?= $row['semester']; ?></td>
-            </tr>
-        <?php endforeach; ?>
-    </tbody>
-</table>
+if ($result->num_rows > 0) {
+    $data = [];
+    while ($row = $result->fetch_assoc()) {
+        $data[] = $row;
+    }
+
+    // Validasi apakah $data iterable sebelum foreach
+    if (is_iterable($data)) {
+        foreach ($data as $row) {
+            $nama = isset($row['nama']) ? $row['nama'] : 'Nama tidak ditemukan';
+            echo "Nama: $nama<br>";
+        }
+    } else {
+        die("Data tidak valid untuk iterasi.");
+    }
+} else {
+    echo "Tidak ada data.";
+}
+
