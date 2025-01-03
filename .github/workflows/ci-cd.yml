@@ -18,6 +18,11 @@ jobs:
         with:
           php-version: '7.4'  # Ganti dengan versi PHP yang kamu butuhkan
 
+      - name: Install PHP extensions
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y php-xml php-xmlwriter php-dom  # Install PHP extensions yang diperlukan
+
       - name: Install dependencies
         run: |
           composer install
@@ -35,7 +40,4 @@ jobs:
         run: |
           # Perintah untuk deployment ke environment staging
           echo "Deploying to staging"
-
-
-
 
