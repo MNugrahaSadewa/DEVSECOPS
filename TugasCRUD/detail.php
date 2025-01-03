@@ -2,13 +2,8 @@
 // Memanggil atau membutuhkan file function.php
 require_once 'function.php'; // Pastikan jalur file sudah benar
 
-// Validasi koneksi database
 /** @var mysqli $koneksi */
-if (!isset($koneksi)) {
-    die("Koneksi database belum tersedia.");
-}
-
-if (!$koneksi) {
+if ($koneksi === false) {
     die("Koneksi database gagal: " . mysqli_connect_error());
 }
 
