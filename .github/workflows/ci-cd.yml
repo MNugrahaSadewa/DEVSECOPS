@@ -40,12 +40,17 @@ jobs:
         vendor/bin/phpunit --debug
 
     # Step 6: Security Scanning Stage (SAST) with SonarQube
+    - name: Install SonarQube Scanner
+      run: |
+        wget -qO- https://dl.bintray.com/sonarsource/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip > sonar-scanner.zip
+        unzip sonar-scanner.zip -d $HOME/sonar-scanner
+        export PATH=$PATH:$HOME/sonar-scanner/sonar-scanner-4.6.2.2472-linux/bin
+
     - name: Security Scan with SonarQube
       run: |
-        # Pastikan SonarQube token sudah diatur sebagai secret di repository
         sonar-scanner
       env:
-        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Menyesuaikan dengan secret yang sudah diatur oleh pemilik repo
+        SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}  # Pastikan SonarQube token sudah ditambahkan sebagai secret
 
   testing-dast:
     needs: build-and-test
