@@ -40,6 +40,9 @@ jobs:
         vendor/bin/phpunit --debug --no-coverage  # Menjalankan unit test dengan opsi debug dan tanpa coverage
 
     # Step 6: Security Scanning Stage (SAST) dengan PHPStan
+    - name: Install PHPStan
+      run: |
+        composer require --dev phpstan/phpstan
     - name: Security Scan with PHPStan
       run: |
         vendor/bin/phpstan analyse . --level=max  # Analisis statis dengan PHPStan
@@ -68,12 +71,12 @@ jobs:
 
     steps:
     # Step 1: Checkout repository
-    - name: Checkout Repository
-      uses: actions/checkout@v3
+      - name: Checkout Repository
+        uses: actions/checkout@v3
 
     # Step 2: Deploy to Staging
-    - name: Deploy to Staging
-      run: |
-        echo "Deploying to staging environment..."
-        # Tambahkan langkah deployment otomatis, seperti menggunakan Docker atau SCP
+      - name: Deploy to Staging
+        run: |
+          echo "Deploying to staging environment..."
+          # Tambahkan langkah deployment otomatis, seperti menggunakan Docker atau SCP
 
