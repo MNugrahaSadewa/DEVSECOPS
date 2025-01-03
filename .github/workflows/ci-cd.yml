@@ -36,7 +36,7 @@ jobs:
     - name: Static Analysis with PHPStan (Level 5)
       run: |
         composer require --dev phpstan/phpstan
-        vendor/bin/phpstan analyse src --level=5
+        vendor/bin/phpstan analyse TugasCRUD --level=5
 
   sast-advanced:
     needs: build-and-test
@@ -62,7 +62,7 @@ jobs:
     # Step 4: Advanced SAST with PHPStan
     - name: Static Analysis with PHPStan (Maximum Level)
       run: |
-        vendor/bin/phpstan analyse src --level=max
+        vendor/bin/phpstan analyse TugasCRUD --level=max
 
   dast-scan:
     needs: sast-advanced
