@@ -1,0 +1,105 @@
+name: CI/CD Pipeline with PHPStan and DAST
+
+on:
+  push:
+    branches:
+      - main
+      - pipeline
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up PHP environment
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer
+
+    # Step 3: Install dependencies
+    - name: Install Dependencies
+      run: |
+        composer install --no-interaction --prefer-dist
+
+    # Step 4: Run Unit Tests
+    - name: Run Unit Tests
+      run: |
+        vendor/bin/phpunit --debug
+
+    # Step 5: SAST with PHPStan (Basic Level)
+    - name: Static Analysis with PHPStan (Level 5)
+      run: |
+        composer require --dev phpstan/phpstan
+        vendor/bin/phpstan analyse TugasCRUD --level=5
+
+  sast-advanced:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Set up PHP environment
+    - name: Set up PHP
+      uses: shivammathur/setup-php@v2
+      with:
+        php-version: '8.2'
+        tools: composer
+
+    # Step 3: Install dependencies (Skip if already installed in cache)
+    - name: Install Dependencies
+      run: |
+        composer install --no-interaction --prefer-dist
+
+    # Step 4: Advanced SAST with PHPStan
+    - name: Static Analysis with PHPStan (Maximum Level)
+      run: |
+        vendor/bin/phpstan analyse TugasCRUD --level=max
+
+  dast-scan:
+    needs: sast-advanced
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Start Testing Environment
+    - name: Start Test Server
+      run: |
+        php -S localhost:8000 -t public &
+        sleep 10 # Tunggu server aktif
+
+    # Step 3: DAST with OWASP ZAP
+    - name: Run OWASP ZAP
+      uses: zaproxy/action-full-scan@v0.6.0
+      with:
+        target: 'http://localhost:8000'
+        fail_action: true
+      env:
+        JAVA_OPTS: '-Djava.awt.headless=true'
+
+  deploy-to-staging:
+    needs: dast-scan
+    runs-on: ubuntu-latest
+
+    steps:
+    # Step 1: Checkout repository
+    - name: Checkout Repository
+      uses: actions/checkout@v3
+
+    # Step 2: Deploy to Staging
+    - name: Deploy to Staging
+      run: |
+        echo "Deploying application to the staging environment..."
+        # Tambahkan langkah deployment otomatis seperti menggunakan Docker, SCP, atau layanan cloud.
+
