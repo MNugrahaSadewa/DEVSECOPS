@@ -178,17 +178,17 @@ jobs:
     # Step 3: Build Docker Image
     - name: Build Docker Image
       run: |
-        docker build -t ${{ secrets.DOCKER_USERNAME }}/devsecops:latest .
+        docker build -t ${{ secrets.DOCKER_USERNAME }}/fixfinal:latest .
 
     # Step 4: Push Docker Image to Docker Hub
     - name: Push Docker Image
       run: |
-        docker push ${{ secrets.DOCKER_USERNAME }}/devsecops:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/fixfinal:latest
 
     # Step 5: Deploy Docker Container
     - name: Deploy Docker Container
       run: |
-        docker stop devsecops || true
-        docker rm devsecops || true
-        docker run -d --name devsecops -p 80:80 ${{ secrets.DOCKER_USERNAME }}/devsecops:latest
+        docker stop fixfinal || true
+        docker rm fixfinal || true
+        docker run -d --name fixfinal -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/fixfinal:latest
 
