@@ -3,6 +3,9 @@
 function setCSPHeader() {
     header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self';");
 }
+function setAntiClickjackingHeader() {
+    header("X-Frame-Options: SAMEORIGIN");
+}
 
 if (session_status() === PHP_SESSION_NONE) {
     session_start();

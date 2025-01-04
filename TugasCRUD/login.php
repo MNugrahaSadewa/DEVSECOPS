@@ -1,4 +1,12 @@
 <?php
+
+function setCSPHeader() {
+    header("Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self'; font-src 'self';");
+}
+
+function setAntiClickjackingHeader() {
+    header("X-Frame-Options: SAMEORIGIN");
+}
 session_start();
 require 'function.php';
 // Jika sudah login, redirect ke index.php
