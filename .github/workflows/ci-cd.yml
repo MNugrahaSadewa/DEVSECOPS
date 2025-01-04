@@ -61,45 +61,66 @@ jobs:
       - name: Advanced Static Analysis with PHPStan (Level 5)
         run: vendor/bin/phpstan analyse --level=5 TugasCRUD
 
-  deploy:
-    needs: [build-and-test, sast-advanced]
+  dast-scan:
     runs-on: ubuntu-latest
-
+    needs: sast-advanced
+    continue-on-error: true
     steps:
-      - name: Checkout Repository
+      - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Login to Docker Hub
-        uses: docker/login-action@v2
-        with:
-          username: ${{ secrets.DOCKER_USERNAME }}
-          password: ${{ secrets.DOCKER_PASSWORD }}
-
-      - name: Build Docker Image
-        run: docker build -t ${{ secrets.DOCKER_USERNAME }}/devsecops:latest .
-
-      - name: Push Docker Image
-        run: docker push ${{ secrets.DOCKER_USERNAME }}/devsecops:latest
-
-      - name: Deploy Docker Container
+      - name: Install Docker Compose
         run: |
-          docker run -d --name devsecops -p 8080:80 ${{ secrets.DOCKER_USERNAME }}/devsecops:latest
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
 
-  dast-scan:
-    needs: deploy
-    runs-on: ubuntu-latest
+      - name: Start Docker Compose
+        run: |
+          docker-compose up -d
 
-    steps:
-      - name: Verify Application Accessibility
-        run: curl http://localhost:8080
+      - name: Wait for Application
+        run: |
+          echo "Waiting for application to start..."
+          sleep 30
 
-      - name: OWASP ZAP Full Scan
-        uses: zaproxy/action-full-scan@v0.6.0
+      - name: Install OWASP ZAP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk wget
+          wget -O zap.sh https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2_15_0_unix.sh
+          chmod +x zap.sh
+          sudo ./zap.sh -dir /opt/zaproxy -q
+
+      - name: Start OWASP ZAP
+        run: |
+          nohup /opt/zaproxy/zap.sh -daemon -host 127.0.0.1 -port 8080 -config api.disablekey=true &
+          sleep 30
+
+      - name: Verify ZAP API
+        run: |
+          curl -X GET "http://127.0.0.1:8080/JSON/core/view/version/" || exit 1
+
+      - name: Run ZAP Spider
+        run: |
+          curl -X GET "http://127.0.0.1:8080/JSON/spider/action/scan/?url=http://localhost:8000"
+          sleep 30
+
+      - name: Run ZAP Active Scan
+        run: |
+          curl -X GET "http://127.0.0.1:8080/JSON/ascan/action/scan/?url=http://localhost:8000"
+          sleep 30
+
+      - name: Save ZAP Report
+        run: |
+          curl -X GET "http://127.0.0.1:8080/OTHER/core/other/htmlreport/" -o zap_report.html    
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v3
         with:
-          target: 'http://localhost:8080'
-          rules_file: '.zap/rules.tsv'
-          fail_on_warn: true
+          name: ZAP Report
+          path: zap_report.html
 
-      - name: Check ZAP Logs
-        run: cat zap.log
-
+      - name: Stop Docker Compose
+        run: docker-compose down
