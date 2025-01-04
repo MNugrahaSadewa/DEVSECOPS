@@ -1,0 +1,126 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+      - Fix
+
+permissions:
+  contents: write
+  security-events: write
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, mysqli
+          tools: composer
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Static Analysis with PHPStan (Level 1)
+        run: vendor/bin/phpstan analyse --level=1 TugasCRUD
+
+      - name: Run PHPUnit Tests
+        run: vendor/bin/phpunit --configuration phpunit.xml
+
+      - name: Lint PHP Files
+        run: find TugasCRUD -type f -name "*.php" -exec php -l {} \;
+
+      - name: Validate Composer Dependencies
+        run: composer audit
+
+  sast-advanced:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+          extensions: mbstring, mysqli
+          tools: composer
+
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist
+
+      - name: Advanced Static Analysis with PHPStan (Level 5)
+        run: vendor/bin/phpstan analyse --level=5 TugasCRUD
+
+  dast-scan:
+    runs-on: ubuntu-latest
+    needs: sast-advanced
+    continue-on-error: true
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Docker Compose
+        run: |
+          curl -fsSL https://get.docker.com -o get-docker.sh
+          sh get-docker.sh
+          sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+
+      - name: Start Docker Compose
+        run: |
+          docker-compose up -d
+
+      - name: Wait for Application
+        run: |
+          echo "Waiting for application to start..."
+          sleep 30
+
+      - name: Install OWASP ZAP
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y openjdk-17-jdk wget
+          wget -O zap.sh https://github.com/zaproxy/zaproxy/releases/download/v2.15.0/ZAP_2_15_0_unix.sh
+          chmod +x zap.sh
+          sudo ./zap.sh -dir /opt/zaproxy -q
+
+      - name: Start OWASP ZAP
+        run: |
+          nohup /opt/zaproxy/zap.sh -daemon -host 127.0.0.1 -port 8080 -config api.disablekey=true &
+          sleep 30
+
+      - name: Verify ZAP API
+        run: |
+          curl -X GET "http://127.0.0.1:8080/JSON/core/view/version/" || exit 1
+
+      - name: Run ZAP Spider
+        run: |
+          curl -X GET "http://127.0.0.1:8080/JSON/spider/action/scan/?url=http://localhost:8000"
+          sleep 30
+
+      - name: Run ZAP Active Scan
+        run: |
+          curl -X GET "http://127.0.0.1:8080/JSON/ascan/action/scan/?url=http://localhost:8000"
+          sleep 30
+
+      - name: Save ZAP Report
+        run: |
+          curl -X GET "http://127.0.0.1:8080/OTHER/core/other/htmlreport/" -o zap_report.html    
+
+      - name: Upload ZAP Report
+        uses: actions/upload-artifact@v3
+        with:
+          name: ZAP Report
+          path: zap_report.html
+
+      - name: Stop Docker Compose
+        run: docker-compose down
