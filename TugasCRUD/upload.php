@@ -2,6 +2,8 @@
 session_start();
 require 'function.php';
 
+$koneksi = mysqli_connect("db", "user", "password", "mahasiswa");
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_FILES['csv_file'])) {
     $file = $_FILES['csv_file']['tmp_name'];
 

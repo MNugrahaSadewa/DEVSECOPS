@@ -2,6 +2,14 @@
 session_start();
 require 'function.php';
 // Jika sudah login, redirect ke index.php
+// Inisialisasi koneksi
+$koneksi = mysqli_connect("db", "user", "password", "mahasiswa");
+
+// Periksa koneksi
+if (!$koneksi) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
+
 if (isset($_SESSION['login'])) {
     header('location:index.php');
     exit;

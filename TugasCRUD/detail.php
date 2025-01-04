@@ -1,7 +1,13 @@
 <?php
 // Memanggil atau membutuhkan file function.php
 require 'function.php';
+//deklarasi $koneksi
+$koneksi = mysqli_connect("db", "user", "password", "mahasiswa");
 
+// Periksa koneksi
+if (!$koneksi) {
+    die("Koneksi gagal: " . mysqli_connect_error());
+}
 // Jika Data Mahasiswa diklik maka
 if (isset($_POST['dataSiswa'])) {
     $output = '';
