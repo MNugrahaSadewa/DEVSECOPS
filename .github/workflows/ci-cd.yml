@@ -79,6 +79,9 @@ jobs:
           extensions: mbstring, mysqli
           tools: composer
 
+      - name: Install Dependencies
+        run: composer install --no-interaction --prefer-dist
+
       - name: Run Static Analysis with PHPStan (Level 5)
         run: vendor/bin/phpstan analyse --level=5 TugasCRUD  # Ganti 'TugasCRUD' dengan direktori kode Anda
 
