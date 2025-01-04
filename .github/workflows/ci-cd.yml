@@ -83,7 +83,7 @@ jobs:
         run: composer install --no-interaction --prefer-dist
 
       - name: Run Static Analysis with PHPStan (Level 5)
-        run: vendor/bin/phpstan analyse --level=5 TugasCRUD  # Ganti 'TugasCRUD' dengan direktori kode Anda
+        run: vendor/bin/phpstan analyse --level=5 TugasCRUD 
 
   dast-scan:
     runs-on: ubuntu-latest
@@ -141,6 +141,15 @@ jobs:
         run: |
           curl -X GET "http://127.0.0.1:8080/OTHER/core/other/htmlreport/" -o zap_report.html    
 
+      - name: Check if ZAP Report Exists
+        run: |
+          if [ -f zap_report.html ]; then
+            echo "Report exists."
+          else
+            echo "Report does not exist."
+            exit 1
+          fi
+
       - name: Upload ZAP Report
         uses: actions/upload-artifact@v3
         with:
@@ -149,4 +158,5 @@ jobs:
 
       - name: Stop Docker Compose
         run: docker-compose down
+
 
