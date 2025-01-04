@@ -26,5 +26,3 @@ if (!$stmt->execute()) {
 }
 
 echo "Registrasi berhasil.";
-
-
